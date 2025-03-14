@@ -44,13 +44,80 @@ public class SpellingBee {
     //  Store them all in the ArrayList words. Do this by calling ANOTHER method
     //  that will find the substrings recursively.
     public void generate() {
-        // YOUR CODE HERE — Call your recursive method!
+        makeWords("", letters);
+    }
+
+    private void makeWords(String prefix, String remaining) {
+        if (!prefix.isEmpty()) {
+            words.add(prefix);
+        }
+        if (remaining.isEmpty()) {
+            return;
+        }
+        for (int i = 0; i < remaining.length(); i++) {
+            String newPrefix = prefix + remaining.charAt(i);
+            String newRemaining = remaining.substring(0, i) + remaining.substring(i + 1);
+            makeWords(newPrefix, newRemaining);
+        }
     }
 
     // TODO: Apply mergesort to sort all words. Do this by calling ANOTHER method
     //  that will find the substrings recursively.
     public void sort() {
-        // YOUR CODE HERE
+        words = mergeSort(words);
+    }
+
+    // Merge sort
+    private ArrayList<String> mergeSort(ArrayList<String> list) {
+        if (list.size() <= 1) {
+            return list;
+        }
+
+        int mid = list.size() / 2;
+        // Left
+        ArrayList<String> left = new ArrayList<>();
+        for (int i = 0; i < mid; i++) {
+            left.add(list.get(i));
+        }
+        // Right
+        ArrayList<String> right = new ArrayList<>();
+        for (int j = mid; j < list.size(); j++) {
+            right.add(list.get(j));
+        }
+        // Sort
+        left = mergeSort(left);
+        right = mergeSort(right);
+
+        return merge(left, right);
+    }
+
+    // Merges into single sorted list
+    private ArrayList<String> merge(ArrayList<String> left, ArrayList<String> right) {
+        ArrayList<String> merged = new ArrayList<>();
+        int i = 0;
+        int j = 0;
+
+        while (i < left.size() && j < right.size()) {
+            // Which element goes first
+            if (left.get(i).compareTo(right.get(j)) <= 0) {
+                merged.add(left.get(i));
+                i++;
+            } else {
+                merged.add(right.get(j));
+                j++;
+            }
+        }
+        // Remaining
+        while (i < left.size()) {
+            merged.add(left.get(i));
+            i++;
+        }
+        // Remaining
+        while (j < right.size()) {
+            merged.add(right.get(j));
+            j++;
+        }
+        return merged;
     }
 
     // Removes duplicates from the sorted list.
