@@ -135,10 +135,36 @@ public class SpellingBee {
     // TODO: For each word in words, use binary search to see if it is in the dictionary.
     //  If it is not in the dictionary, remove it from words.
     public void checkWords() {
-        // YOUR CODE HERE
+        // Binary search through words
+        int i = 0;
+        while (i < words.size()) {
+            // Remove
+            if (!found(words.get(i))) {
+                words.remove(i);
+            } else {
+                i++;
+            }
+        }
     }
 
-    // Prints all valid words to wordList.txt
+    // Binary search if word exists
+    private boolean found(String s) {
+        int left = 0;
+        int right = DICTIONARY_SIZE - 1;
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            int comparison = s.compareTo(DICTIONARY[mid]);
+            if (comparison == 0) {
+                return true;
+            } else if (comparison < 0) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return false;
+    }
+
     public void printWords() throws IOException {
         File wordFile = new File("Resources/wordList.txt");
         BufferedWriter writer = new BufferedWriter(new FileWriter(wordFile, false));
